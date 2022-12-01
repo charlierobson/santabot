@@ -60,12 +60,16 @@ void setup(void) {
   });
   server.on("/setState", HTTP_POST, []() {
     char* endPtr;
-    
+
     if (server.args() == 0) {
       return server.send(500);
     }
-    
+
     server.arg(0).toCharArray(buffer, BUFFER_SIZE);
+
+    Serial.print("POSTed state: ");
+    Serial.println(buffer);
+
     stateMachine.setState(atoi(buffer));
     server.send(200);
   });
@@ -114,9 +118,12 @@ void setup(void) {
     }
   });
 
+  vars[0] = 1500;
+  vars[1] = 20;
+
   server.begin();
 
-  stateMachine.begin();
+  stateMachine.begin(0);
 }
 
 void loop(void) {

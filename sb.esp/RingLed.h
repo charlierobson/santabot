@@ -1,22 +1,18 @@
-#include <Arduino.h>
+#ifndef RINGLED_H
+#define RINGLED_H
 
-#include <FastLED.h>
+#include "WS28.h"
 
-#if FASTLED_VERSION < 3001000
-#error "Requires FastLED 3.1 or later; check github for latest code."
-#endif
+class RingLed : public WS28 {
+  private:
+    static const int DATA_PIN = 5;
+    static const int NUM_LEDS = 10;
 
-class RingLed {
-private:
-  static const int DATA_PIN = 5;
-  static const int NUM_LEDS = 10;
+  public:
+    RingLed();
 
-  int _pattern;
-  int _lastMillis;
-  CRGB _leds[NUM_LEDS];
-
-public:
-  void begin();
-  void setPattern(int);
-  void update();
+    void begin();
+    bool update();
 };
+
+#endif

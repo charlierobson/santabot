@@ -1,19 +1,19 @@
 #include "TheOrb.h"
 
 void TheOrb::begin() {
-  pinMode(18,OUTPUT);
-  pinMode(19,OUTPUT);
+  pinMode(18, OUTPUT);
+  pinMode(19, OUTPUT);
 
-  ledcSetup(0, 200, 8);
+  ledcSetup(0, 100, 8);
   ledcAttachPin(18, 0);
-  ledcSetup(1, 200, 8);
+  ledcSetup(1, 100, 8);
   ledcAttachPin(19, 1);
 
   setSpeed(0);
 }
 
 void TheOrb::update() {
- 
+
 }
 
 void TheOrb::setSpeed(int speed) {

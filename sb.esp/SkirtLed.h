@@ -1,24 +1,18 @@
-#include <Arduino.h>
+#ifndef SKIRTLED_H
+#define SKIRTLED_H
 
-#include <FastLED.h>
+#include "WS28.h"
 
-#if FASTLED_VERSION < 3001000
-#error "Requires FastLED 3.1 or later; check github for latest code."
-#endif
+class SkirtLed : public WS28 {
+  private:
+    static const int DATA_PIN = 26;
+    static const int NUM_LEDS = 50;
 
-extern int vars[5];
+  public:
+    SkirtLed();
 
-class SkirtLed {
-private:
-  static const int DATA_PIN = 27;
-  static const int NUM_LEDS = 50;
-
-  int _pattern;
-  int _lastMillis;
-  CRGB _leds[NUM_LEDS];
-
-public:
-  void begin();
-  void setPattern(int pattern);
-  void update();
+    void begin();
+    bool update();
 };
+
+#endif

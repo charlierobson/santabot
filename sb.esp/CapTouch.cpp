@@ -1,11 +1,8 @@
 #include "CapTouch.h"
 
-void CapTouch::begin(){
+void CapTouch::begin() {
 }
 
-void CapTouch::update(){
-}
-
-bool CapTouch::isTouched() {
+bool CapTouch::update() {
   return touchRead(4) < 10;
 }
