@@ -56,7 +56,8 @@ void setup(void) {
     server.send(200, "text/html", serverIndex);
   });
   server.on("/getState", HTTP_GET, []() {
-    server.send(200, "application/json", "{\"state\":1,\"sound\":-1}");
+    sprintf(buffer, "{\"state\":%d,\"vars\":[%d,%d,%d,%d,%d]}", stateMachine.getState(),vars[0],vars[1],vars[2],vars[3],vars[4]);
+    server.send(200, "application/json", buffer);
   });
   server.on("/setState", HTTP_POST, []() {
     char* endPtr;
@@ -82,7 +83,7 @@ void setup(void) {
     server.arg(0).toCharArray(buffer, BUFFER_SIZE);
 
     char* command = strtok(buffer, ",");
-    while (command != NULL)
+    while (command != NULL && i < 5)
     {
       vars[i] = atoi(command);
       ++i;
@@ -118,16 +119,12 @@ void setup(void) {
     }
   });
 
-  vars[0] = 1500;
-  vars[1] = 20;
-
   server.begin();
 
-  stateMachine.begin(0);
+  stateMachine.begin(StateMachine::sleep);
 }
 
 void loop(void) {
   server.handleClient();
-
   stateMachine.update();
 }

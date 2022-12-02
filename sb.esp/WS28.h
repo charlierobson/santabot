@@ -11,25 +11,46 @@
 
 class WS28 {
   protected:
-    int _numleds;
+    int _numLeds;
     int _pattern;
     int _lastMillis;
-
+    int _hue;
+  
     CRGB _leds[50];
 
     bool black();
     bool red();
     bool breathe();
-    bool pride();
     bool wakeup();
+    bool nameSelect();
+    bool waitTouch();
+    bool touched();
+    bool evaluate();
+    bool nice();
+    bool naughty();
+    bool hal();
+    bool pride();
 
   public:
-    virtual void begin() = 0;
+    enum {
+      ptnOff = 0,
+      ptnBreathe,
+      ptnStartup,
+      ptnNameSelect,
+      ptnWaitTouch,
+      ptnTouched,
+      ptnEvaluate,
+      ptnNice,
+	  ptnNaughty,
+	  ptnHAL
+    } pattern;
 
     // true when pattern complete
-    virtual bool update() = 0;
+    bool update(int hue);
 
     void setPattern(int pattern);
+
+    void show();
 };
 
 #endif

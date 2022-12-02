@@ -2,16 +2,62 @@
 
 extern int vars[5];
 
+bool WS28::update(int hue) {
+  _hue = hue;
+
+  bool completed = false;
+  switch (_pattern)
+  {
+    case WS28::ptnOff:
+      black();
+      break;
+    case ptnBreathe:
+      breathe();
+      break;
+    case ptnStartup:
+      completed = wakeup();
+      break;
+    case ptnWaitTouch:
+      waitTouch();
+      break;
+    case ptnTouched:
+      touched();
+      break;
+    case ptnNameSelect:
+      nameSelect();
+      break;
+    case ptnEvaluate:
+      evaluate();
+      break;
+    case ptnNice:
+      nice();
+      break;
+    case ptnNaughty:
+      naughty();
+      break;
+    case ptnHAL:
+      hal();
+      break;
+  }
+  return completed;
+}
+
+
+void WS28::show() {
+  FastLED.show();
+}
+
 
 void WS28::setPattern(int pattern) {
   _lastMillis = millis();
   _pattern = pattern;
+  FastLED.setBrightness(255);
 }
 
 
 bool WS28::red()
 {
-  for ( uint16_t i = 0 ; i < _numleds; i++) {
+  for ( uint16_t i = 0 ; i < _numLeds; i++) {
     nblend(_leds[i], millis() & 512 ? CRGB::Red : CRGB::Black, 8);
   }
   return false;
@@ -20,8 +66,90 @@ bool WS28::red()
 
 bool WS28::black()
 {
-  for ( uint16_t i = 0 ; i < _numleds; i++) {
+  for ( uint16_t i = 0 ; i < _numLeds; i++) {
     nblend(_leds[i], CRGB::Black, 8);
+  }
+  return false;
+}
+
+
+bool WS28::touched()
+{
+  int elapsed = millis() - _lastMillis;
+  if (elapsed < 100) {
+    for ( uint16_t i = 0 ; i < _numLeds; i++)
+      _leds[i] = CRGB::Green;
+  }
+  FastLED.setBrightness(255-((elapsed-100)/4));
+  return false;
+}
+
+
+bool WS28::hal()
+{
+  int elapsed = millis() - _lastMillis;
+  int b = 255-(elapsed/4);
+  if (b < 0) b = 0;
+
+  for ( uint16_t i = 0 ; i < _numLeds; i++)
+    _leds[i] = CRGB::Red;
+
+  FastLED.setBrightness(b);
+  return false;
+}
+
+
+bool WS28::nameSelect()
+{
+  FastLED.setBrightness(64);
+  int offset = ((millis() - _lastMillis) / 2048) % 40;
+  for (int i = 0; i < 40; ++i) {
+     _leds[(i+offset)%40] = ((i/4)&1) ? CRGB::Green : CRGB::Red;
+  }
+
+  return false;
+}
+
+
+bool WS28::waitTouch()
+{
+  int offset = ((millis() - _lastMillis) / 100) % 40;
+  for (int i = 0; i < 40; ++i) {
+     _leds[(i+offset)%40] = ((i/4)&1) ? CRGB::Green : CRGB::Red;
+  }
+
+  return false;
+}
+
+
+bool WS28::evaluate()
+{
+  // random colored speckles that blink in and fade smoothly
+  fadeToBlackBy( _leds, _numLeds, 10);
+  int pos = random16(_numLeds);
+  _leds[pos] += CHSV( (millis()&1024 ? 96: 0) + random8(64), 200, 255);
+  return false;
+}
+
+
+bool WS28::nice()
+{
+  // random colored speckles that blink in and fade smoothly
+  fill_rainbow( _leds, _numLeds, _hue, 7);
+  if( random8() < 80) {
+    _leds[ random16(_numLeds) ] += CRGB::White;
+  }
+  return false;
+}
+
+
+bool WS28::naughty()
+{
+  int divisor = 1 << ((millis() - _lastMillis) / 1000);
+  if (divisor > 256) divisor = 256;
+
+  for ( uint16_t i = 0 ; i < _numLeds; i++) {
+    nblend(_leds[i], millis() & (512/divisor) ? CRGB::Red : CRGB::Black, 8);
   }
   return false;
 }
@@ -29,22 +157,23 @@ bool WS28::black()
 
 bool WS28::breathe()
 {
-  for ( uint16_t i = 0 ; i < _numleds; i++) {
+  for ( uint16_t i = 0 ; i < _numLeds; i++) {
     _leds[i] = CRGB::Black;
   }
 
   int pos = millis() & 8191;
   if (pos < 4096)
-    _leds[19] = CHSV(0, 0, pos / 16);
+    _leds[14] = CHSV(0, 0, pos / 16);
   else
     pos -= 4096;
-    _leds[19] = CHSV(0, 0, 256 - (pos / 16));
+    _leds[14] = CHSV(0, 0, 256 - (pos / 16));
+
   return false;
 }
 
 bool WS28::wakeup()
 {
-  const int rate = vars[0];
+  const int rate = 1500;
 
   int elapsed = millis() - _lastMillis;
   if (elapsed < rate * 3) {
@@ -61,18 +190,16 @@ bool WS28::wakeup()
       _leds[40 - (int)nPos] = CRGB::White;
     }
     else if (pos < 100) {
-      for (int i = 0; i < _numleds; ++i)
+      for (int i = 0; i < _numLeds; ++i)
         _leds[i] = CRGB::White;
     }
   }
 
-  fadeToBlackBy(_leds, _numleds, vars[1]);
+  fadeToBlackBy(_leds, _numLeds, 20);
   return elapsed > rate * 3;
 }
 
 
-// This function draws rainbows with an ever-changing,
-// widely-varying set of parameters.
 bool WS28::pride()
 {
   static uint16_t sPseudotime = 0;
@@ -94,7 +221,7 @@ bool WS28::pride()
   sHue16 += deltams * beatsin88( 400, 5, 9);
   uint16_t brightnesstheta16 = sPseudotime;
 
-  for ( uint16_t i = 0 ; i < _numleds; i++) {
+  for ( uint16_t i = 0 ; i < _numLeds; i++) {
     hue16 += hueinc16;
     uint8_t hue8 = hue16 / 256;
 
@@ -108,7 +235,7 @@ bool WS28::pride()
     CRGB newcolor = CHSV( hue8, sat8, bri8);
 
     uint16_t pixelnumber = i;
-    pixelnumber = (_numleds - 1) - pixelnumber;
+    pixelnumber = (_numLeds - 1) - pixelnumber;
 
     nblend(_leds[pixelnumber], newcolor, 64);
   }

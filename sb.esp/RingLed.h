@@ -10,9 +10,6 @@ class RingLed : public WS28 {
 
   public:
     RingLed();
-
-    void begin();
-    bool update();
 };
 
 #endif

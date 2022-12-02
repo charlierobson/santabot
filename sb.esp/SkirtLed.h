@@ -10,9 +10,6 @@ class SkirtLed : public WS28 {
 
   public:
     SkirtLed();
-
-    void begin();
-    bool update();
 };
 
 #endif
