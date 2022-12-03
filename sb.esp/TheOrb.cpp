@@ -17,10 +17,8 @@ void TheOrb::update() {
 }
 
 void TheOrb::setSpeed(int speed) {
-  _speed = speed;
-
-  if (_speed < 0) {
-    _speed = -_speed;
+  if (speed < 0) {
+    speed = -speed;
 
     ledcWrite(0, speed);
     ledcWrite(1, 0);

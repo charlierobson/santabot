@@ -5,7 +5,7 @@
 
 class SkirtLed : public WS28 {
   private:
-    static const int DATA_PIN = 26;
+    static const int DATA_PIN = 27;
     static const int NUM_LEDS = 50;
 
   public:

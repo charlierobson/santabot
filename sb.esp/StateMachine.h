@@ -11,7 +11,6 @@ class StateMachine {
 
     bool _skirtComplete;
     bool _touched;
-    bool _fStop;
 
   public:
     enum {

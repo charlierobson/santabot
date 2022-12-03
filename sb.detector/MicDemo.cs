@@ -68,8 +68,13 @@ namespace PorcupineDemo
                     int result = porcupine.Process(pcm);
                     if (result >= 0)
                     {
+                        recorder.Stop();
                         Console.WriteLine($"[{DateTime.Now.ToLongTimeString()}] Detected '{keywordNames[result]}'");
                         sp.Play();
+
+                        // pause recording so we don't hear ourselves santabotting
+                        Thread.Sleep(2000);
+                        recorder.Start();
                     }
 
                     Thread.Yield();

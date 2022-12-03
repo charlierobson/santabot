@@ -87,24 +87,30 @@ bool WS28::touched()
 
 bool WS28::hal()
 {
-  int elapsed = millis() - _lastMillis;
-  int b = 255-(elapsed/4);
-  if (b < 0) b = 0;
-
   for ( uint16_t i = 0 ; i < _numLeds; i++)
     _leds[i] = CRGB::Red;
 
-  FastLED.setBrightness(b);
+  int phase = (millis() - _lastMillis) / 1000;
+  if (phase >= 6 && phase < 15){
+	float b = ((float)(phase - 6) / 9.0) * 255;
+  	FastLED.setBrightness(255-(int)b);
+  }
+  if (phase >= 15) {
+  	FastLED.setBrightness(255);
+	// a colored dot sweeping back and forth, with fading trails
+	fadeToBlackBy(_leds, _numLeds, 20);
+	int pos = beatsin16( 13, 0, _numLeds-1 );
+	_leds[pos] += CHSV( _hue, 255, 192);
+  }
   return false;
 }
 
 
 bool WS28::nameSelect()
 {
-  FastLED.setBrightness(64);
-  int offset = ((millis() - _lastMillis) / 2048) % 40;
+  FastLED.setBrightness(32);
   for (int i = 0; i < 40; ++i) {
-     _leds[(i+offset)%40] = ((i/4)&1) ? CRGB::Green : CRGB::Red;
+     _leds[i] = ((i/4)&1) ? CRGB::Green : CRGB::Red;
   }
 
   return false;
@@ -157,10 +163,6 @@ bool WS28::naughty()
 
 bool WS28::breathe()
 {
-  for ( uint16_t i = 0 ; i < _numLeds; i++) {
-    _leds[i] = CRGB::Black;
-  }
-
   int pos = millis() & 8191;
   if (pos < 4096)
     _leds[14] = CHSV(0, 0, pos / 16);
@@ -168,15 +170,18 @@ bool WS28::breathe()
     pos -= 4096;
     _leds[14] = CHSV(0, 0, 256 - (pos / 16));
 
+  fadeToBlackBy(_leds, _numLeds, 20);
   return false;
 }
 
+static CRGB dark(32,32,32);
+
 bool WS28::wakeup()
 {
-  const int rate = 1500;
+  const int rate = 1000;
 
   int elapsed = millis() - _lastMillis;
-  if (elapsed < rate * 3) {
+  if (elapsed < rate * 4) {
 
     int phase = elapsed / rate;
     int pos = elapsed % rate;
@@ -184,19 +189,22 @@ bool WS28::wakeup()
     float nPos = (float)pos / float(rate) * 40.0;
 
     if (phase == 0) {
-      _leds[(int)nPos] = CRGB::White;
+		for (int i = 0; i < _numLeds; ++i)
+			_leds[i] = pos < 500 ? dark : CRGB::White;
     }
     else if (phase == 1) {
-      _leds[40 - (int)nPos] = CRGB::White;
+      _leds[(int)nPos] = CRGB::HotPink;
     }
-    else if (pos < 100) {
-      for (int i = 0; i < _numLeds; ++i)
-        _leds[i] = CRGB::White;
+    else {
+		int o = elapsed % 2000;
+		int start = (o / 500) * 10;
+		for (int i = 0; i < _numLeds; ++i)
+			_leds[i] = (i >= start && i < start + 10) ? CRGB::White : CRGB::Blue;
     }
   }
 
   fadeToBlackBy(_leds, _numLeds, 20);
-  return elapsed > rate * 3;
+  return elapsed > rate * 4;
 }
 
 

@@ -19,7 +19,7 @@ StateMachine stateMachine;
 
 int vars[5];
 
-const int BUFFER_SIZE = 20;
+const int BUFFER_SIZE = 200;
 char buffer[BUFFER_SIZE];
 
 void setup(void) {

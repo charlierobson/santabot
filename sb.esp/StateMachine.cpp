@@ -5,12 +5,15 @@
 #include "CapTouch.h"
 #include "FStop.h"
 #include "TheOrb.h"
+#include "RandoLED.h"
+#include "PosterBoy.h"
 
 RingLed ringLed;
 SkirtLed skirtLed;
 CapTouch capTouch;
 FStop fStop;
 TheOrb theOrb;
+RandoLED randoLED;
 
 extern int vars[5];
 
@@ -19,6 +22,7 @@ void StateMachine::begin(int initialState)
   theOrb.begin();
   capTouch.begin();
   fStop.begin();
+  randoLED.begin();
 
   setState(initialState);
 }
@@ -64,6 +68,7 @@ void StateMachine::update()
     case startup:
       {
         if (_frames == 0) {
+          PosterBoy::send("play", "startup.wav");
           ringLed.setPattern(WS28::ptnOff);
           skirtLed.setPattern(WS28::ptnStartup);
         }
@@ -91,9 +96,12 @@ void StateMachine::update()
         if (_frames == 0) {
           ringLed.setPattern(WS28::ptnOff);
           skirtLed.setPattern(WS28::ptnWaitTouch);
+		  // if julie..?
+		  if (vars[0])
+		  	PosterBoy::send("play", "arcing.wav");
         }
         // exit state when touched
-		if (_touched) 
+		if (capTouch.update()) 
 			nextState = touched;
       }
       break;
@@ -103,10 +111,10 @@ void StateMachine::update()
         if (_frames == 0) {
           ringLed.setPattern(WS28::ptnTouched);
           skirtLed.setPattern(WS28::ptnTouched);
-          theOrb.setSpeed(100);
         }
-        if (millis() - _lastMillis > 1000)
-			nextState = evaluate;
+        if (millis() - _lastMillis > 1000) {
+          nextState = evaluate;
+        }
       }
       break;
 
@@ -115,9 +123,12 @@ void StateMachine::update()
         if (_frames == 0) {
           ringLed.setPattern(WS28::ptnEvaluate);
           skirtLed.setPattern(WS28::ptnEvaluate);
-          theOrb.setSpeed(90);
+          PosterBoy::send("play", "evaluate.wav");
         }
-        // exit state when tablet says so
+
+        theOrb.setSpeed(millis() & 1024 ? 90 : -90);
+
+        // exit state when tablet says so?
         if (millis() - _lastMillis > 10000)
 			nextState = vars[0] == 0 ? nice : naughty;
       }
@@ -129,10 +140,13 @@ void StateMachine::update()
           ringLed.setPattern(WS28::ptnNice);
           skirtLed.setPattern(WS28::ptnNice);
           theOrb.setSpeed(0);
+          PosterBoy::send("play", "evaluate-nice.wav");
+          PosterBoy::send("print", "nice Your Name Here");
         }
         // exit state when print complete
-        if (millis() - _lastMillis > 6000)
-			nextState = nameselect;
+        if (millis() - _lastMillis > 6000) {
+          nextState = nameselect;
+        }
       }
       break;
 
@@ -141,14 +155,18 @@ void StateMachine::update()
         if (_frames == 0) {
           ringLed.setPattern(WS28::ptnNaughty);
           skirtLed.setPattern(WS28::ptnNaughty);
+          PosterBoy::send("loop", "evaluate-naughty.wav");
+          PosterBoy::send("print", "naughty");
         }
 		int rate = (millis()-_lastMillis) / 30;
 		if (rate > (255-90)) rate = (255-90);
         theOrb.setSpeed(90+rate);
 
         // exit state when e-stop hit
-       if (_fStop)
+       if (fStop.engaged()) {
 			nextState = hal;
+          PosterBoy::send("stop", "");
+	   }
       }
       break;
 
@@ -157,6 +175,7 @@ void StateMachine::update()
         if (_frames == 0) {
           ringLed.setPattern(WS28::ptnHAL);
           skirtLed.setPattern(WS28::ptnHAL);
+          PosterBoy::send("play", "fading-alt2.wav");
         }
 
         int rate = 255 - millis()-_lastMillis;
@@ -174,13 +193,14 @@ void StateMachine::update()
   _skirtComplete = skirtLed.update(hue);
   skirtLed.show();
 
-  _touched = capTouch.update();
-  _fStop = fStop.engaged();
-
   theOrb.update();
+  if (_state > sleep && _state < hal)
+  	randoLED.update();
+  else
+  	randoLED.begin();
 
-  vars[2] = _touched;
-  vars[3] = _fStop;
+  vars[2] = capTouch.update();
+  vars[3] = fStop.engaged();
 
   if (nextState != _state) {
     setState(nextState);

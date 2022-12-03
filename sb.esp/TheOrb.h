@@ -4,8 +4,6 @@
 #include <Arduino.h>
 
 class TheOrb {
-    int _speed;
-
   public:
     void begin();
     void update();
