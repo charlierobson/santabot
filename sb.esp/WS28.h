@@ -23,6 +23,7 @@ class WS28 {
     bool breathe();
     bool wakeup();
     bool nameSelect();
+    bool arcing();
     bool waitTouch();
     bool touched();
     bool evaluate();
@@ -38,6 +39,7 @@ class WS28 {
       ptnStartup,
       ptnNameSelect,
       ptnWaitTouch,
+      ptnArcing,
       ptnTouched,
       ptnEvaluate,
       ptnNice,

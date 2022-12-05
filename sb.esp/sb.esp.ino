@@ -17,15 +17,30 @@ WebServer server(80);
 
 StateMachine stateMachine;
 
+char fzm1[75];
+char cf20[75];
+char name[75];
+char var3[75];
+char var4[75];
+
 int vars[5];
 
-const int BUFFER_SIZE = 200;
+char* svars[] = {
+	fzm1, cf20, name, var3, var4
+};
+
+const int BUFFER_SIZE = 1024;
 char buffer[BUFFER_SIZE];
 
 void setup(void) {
   Serial.begin(115200);
 
   Serial.println("");
+
+  strcpy(svars[0],"http://172.16.5.67:8000/");
+  strcpy(svars[1],"http://13.40.82.25:8081/");
+  for(int i = 2; i < 5; ++i)
+    strcpy(svars[i], "--");
 
   wifiMulti.addAP("Pottymother", "ec3ecbf5e8");
   wifiMulti.addAP("B2M Solutions ", "badentractfurysnare");
@@ -46,17 +61,25 @@ void setup(void) {
   Serial.print(host);
   Serial.println(".local");
 
-  /*return index page which is stored in serverIndex */
+  sprintf(buffer, "%s", WiFi.localIP());
+
   server.on("/", HTTP_GET, []() {
+	IPAddress adr = WiFi.localIP();
+    sprintf(buffer, "%d.%d.%d.%d", adr[0], adr[1], adr[2], adr[3]);
     server.sendHeader("Connection", "close");
-    server.send(200, "text/html", loginIndex);
+    server.send(200, "text/html", buffer);
   });
+
   server.on("/serverIndex", HTTP_GET, []() {
     server.sendHeader("Connection", "close");
     server.send(200, "text/html", serverIndex);
   });
+
   server.on("/getState", HTTP_GET, []() {
-    sprintf(buffer, "{\"state\":%d,\"vars\":[%d,%d,%d,%d,%d]}", stateMachine.getState(),vars[0],vars[1],vars[2],vars[3],vars[4]);
+    sprintf(buffer, "{\"state\":%d,\"vars\":[%d,%d,%d,%d,%d],\"stringvars\":[\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"]}",
+	 stateMachine.getState(),
+	 vars[0],vars[1],vars[2],vars[3],vars[4],
+	 svars[0],svars[1],svars[2],svars[3],svars[4]);
     server.send(200, "application/json", buffer);
   });
   server.on("/setState", HTTP_POST, []() {
@@ -89,6 +112,36 @@ void setup(void) {
       ++i;
       command = strtok(0, ",");
     }
+
+    server.send(200);
+  });
+  server.on("/setConfig", HTTP_POST, []() {
+    int i = 0;
+    if (server.args() == 0) {
+      return server.send(500);
+    }
+
+    server.arg(0).toCharArray(buffer, BUFFER_SIZE);
+
+    char* command = strtok(buffer, ",");
+    while (command != NULL && i < 5)
+    {
+      strcpy(svars[i], command);
+      ++i;
+      command = strtok(0, ",");
+    }
+
+    server.send(200);
+  });
+  server.on("/print", HTTP_POST, []() {
+    if (server.args() == 0) {
+      return server.send(500);
+    }
+
+    server.arg(0).toCharArray(name, BUFFER_SIZE);
+
+    Serial.print("POSTed print: ");
+    Serial.println(name);
 
     server.send(200);
   });

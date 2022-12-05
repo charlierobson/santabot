@@ -6,7 +6,7 @@
 class PosterBoy
 {
 public:
-	static void send(const char* endpoint, const char* data);
+	static void send(const char* server, const char* endpoint, const char* data);
 };
 
 #endif

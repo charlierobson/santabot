@@ -15,14 +15,14 @@ class StateMachine {
   public:
     enum {
       sleep = 0,      // sb is idle, single led 'breathing'
-      startup,        // quick startup animation -> nameselect
-      nameselect,     // ambient animation
-      waittouch,      // name is selected, sb does waiting for touch anim touch -> touched
-      touched,        // confirmation anim -> evaluate
-      evaluate,       // main animation
-      nice,           // colourful happy anim -> nameselect
-      naughty,        // naughty anim -> go wrong
-      gowrong,        // glitching out, press of f-stop -> hal
+      startup,        // 1 quick startup animation -> nameselect
+      nameselect,     // 2 ambient animation
+      waittouch,      // 3 name is selected, sb does waiting for touch anim touch -> touched
+      touched,        // 4 confirmation anim -> evaluate
+      evaluate,       // 5 main animation
+      nice,           // 6 colourful happy anim -> nameselect
+      naughty,        // 7 naughty anim -> go wrong
+      gowrong,        // 8 glitching out, press of f-stop -> hal
       hal
     } state;
 

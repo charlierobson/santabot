@@ -5,17 +5,24 @@
 
 extern char buffer[];
 
-void PosterBoy::send(const char* endpoint, const char* data)
+extern char fzm1[];
+extern char cf20[];
+
+void PosterBoy::send(const char* server, const char* endpoint, const char* data)
 {
 	WiFiClient client;
 	HTTPClient http;
 
-	strcpy(buffer, "http://192.168.1.116:8000/");
+	strcpy(buffer, server);
 	strcat(buffer, endpoint);
 	http.begin(client, buffer);
 
+	Serial.println(buffer);
+	Serial.println(data);
+
 	http.addHeader("Content-Type", "text/plain");
 	int httpResponseCode = http.POST(data);
-
+	Serial.println(httpResponseCode);
+	Serial.println();
 	http.end();
 }

@@ -20,6 +20,9 @@ bool WS28::update(int hue) {
     case ptnWaitTouch:
       waitTouch();
       break;
+    case ptnArcing:
+      arcing();
+      break;
     case ptnTouched:
       touched();
       break;
@@ -92,7 +95,7 @@ bool WS28::hal()
 
   int phase = (millis() - _lastMillis) / 1000;
   if (phase >= 6 && phase < 15){
-	float b = ((float)(phase - 6) / 9.0) * 255;
+	float b = ((float)(phase - 6) / 8.0) * 255;
   	FastLED.setBrightness(255-(int)b);
   }
   if (phase >= 15) {
@@ -108,7 +111,7 @@ bool WS28::hal()
 
 bool WS28::nameSelect()
 {
-  FastLED.setBrightness(32);
+  FastLED.setBrightness(16);
   for (int i = 0; i < 40; ++i) {
      _leds[i] = ((i/4)&1) ? CRGB::Green : CRGB::Red;
   }
@@ -124,6 +127,17 @@ bool WS28::waitTouch()
      _leds[(i+offset)%40] = ((i/4)&1) ? CRGB::Green : CRGB::Red;
   }
 
+  return false;
+}
+
+
+bool WS28::arcing()
+{
+  FastLED.setBrightness(random(255));
+  if (millis() - _lastMillis > 2000) {
+	_pattern = ptnWaitTouch;
+    FastLED.setBrightness(255);
+  }
   return false;
 }
 
