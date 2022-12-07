@@ -13,12 +13,15 @@
   * sb-responder to cf-20 and test
 * note IP addresses for cf & fz
 * post addresses into config action in insomnia
+
 ### cf-20
+* pull latest web & srv, copy to cf-20
 * build server
 * run server
 * test server with test action from insomnia
 * build website
 * run website
+
 ### santabot
 * check e-stop
 * turn off printer
