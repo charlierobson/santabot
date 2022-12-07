@@ -134,7 +134,7 @@ bool WS28::waitTouch()
 bool WS28::arcing()
 {
   FastLED.setBrightness(random(255));
-  if (millis() - _lastMillis > 2000) {
+  if (millis() - _lastMillis > 3000) {
 	_pattern = ptnWaitTouch;
     FastLED.setBrightness(255);
   }

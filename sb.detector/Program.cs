@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Media;
+using System.Net;
 using System.Reflection;
 using System.Threading;
 
@@ -35,6 +36,11 @@ namespace PorcupineDemo
             AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
 
             string accessKey = "dRu0zJRd5PQ9HjWfsQlKaCaUvKyTLS/Vo3PJm2EEvcKl3VBnOoHABg==";
+
+            string hostName = Dns.GetHostName();
+            IPAddress[] addresses = Dns.GetHostEntry(hostName).AddressList;
+            string ip = addresses[1].ToString();
+            Console.WriteLine($"sb.detector IP: {ip}");
 
             var keywordPaths = new List<string>
             {

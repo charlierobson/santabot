@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.32929.386
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sb-detector", "sb.detector\sb-detector.csproj", "{EB5E781D-3800-4E00-8E08-D9C48E1A9798}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "printx", "sb.print\printx.csproj", "{913982CC-EC50-4837-AEC5-899B94235EC3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sb-print", "sb.print\sb-print.csproj", "{913982CC-EC50-4837-AEC5-899B94235EC3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

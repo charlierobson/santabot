@@ -21,6 +21,8 @@ extern char fzm1[];
 extern char cf20[];
 extern char name[];
 
+extern char buffer[];
+
 void StateMachine::begin(int initialState)
 {
   theOrb.begin();
@@ -87,7 +89,7 @@ void StateMachine::update()
     case nameselect:
       {
         if (_frames == 0) {
-//          PosterBoy::send(fzm1, "play", "ambience-quiet.wav");
+          PosterBoy::send(fzm1, "play", "nameselect.wav");
           ringLed.setPattern(WS28::ptnOff);
           skirtLed.setPattern(WS28::ptnNameSelect);
           FastLED.setBrightness(128);
@@ -99,18 +101,21 @@ void StateMachine::update()
     case waittouch:
       {
         if (_frames == 0) {
+          PosterBoy::send(fzm1, "stop", "");
           ringLed.setPattern(WS28::ptnOff);
-		  // if julie..?
-		  if (strcmp(name, "naughty") == 0) {
-		  	PosterBoy::send(fzm1, "play", "arcing.wav");
+          // if julie..?
+          if (strcmp(name, "naughty") == 0) {
+            PosterBoy::send(fzm1, "play", "arcing.wav");
             skirtLed.setPattern(WS28::ptnArcing);
-		  }
-		  else
-          	skirtLed.setPattern(WS28::ptnWaitTouch);
+          }
+          else {
+            // need to play a doobeedoop here
+            skirtLed.setPattern(WS28::ptnWaitTouch);
+          }
         }
         // exit state when touched
-		if (capTouch.update()) 
-			nextState = evaluate;
+        if (capTouch.update()) 
+          nextState = evaluate;
       }
       break;
 
@@ -140,7 +145,8 @@ void StateMachine::update()
           skirtLed.setPattern(WS28::ptnNice);
           theOrb.setSpeed(0);
           PosterBoy::send(fzm1, "play", "evaluate-nice.wav");
-          PosterBoy::send(fzm1, "print", name);
+          sprintf(buffer, "nice %s", name);
+          PosterBoy::send(fzm1, "print", buffer);
         }
         // exit state when print complete
         if (millis() - _lastMillis > 6000) {
@@ -157,16 +163,16 @@ void StateMachine::update()
           PosterBoy::send(fzm1, "loop", "evaluate-naughty.wav");
           PosterBoy::send(fzm1, "print", "naughty");
         }
-		int rate = (millis()-_lastMillis) / 30;
-		if (rate > (255-orbBaseSpeed)) rate = (255-orbBaseSpeed);
+        int rate = (millis()-_lastMillis) / 30;
+        if (rate > (255-orbBaseSpeed)) rate = (255-orbBaseSpeed);
         theOrb.setSpeed(orbBaseSpeed+rate);
 
         // exit state when e-stop hit
        if (fStop.engaged()) {
-			nextState = hal;
+          nextState = hal;
           PosterBoy::send(cf20, "santabot", "hal");
           PosterBoy::send(fzm1, "stop", "");
-	   }
+       }
       }
       break;
 

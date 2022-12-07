@@ -63,6 +63,8 @@ void setup(void) {
 
   sprintf(buffer, "%s", WiFi.localIP());
 
+  server.enableCORS(true);
+
   server.on("/", HTTP_GET, []() {
 	IPAddress adr = WiFi.localIP();
     sprintf(buffer, "%d.%d.%d.%d", adr[0], adr[1], adr[2], adr[3]);
@@ -91,7 +93,7 @@ void setup(void) {
 
     server.arg(0).toCharArray(buffer, BUFFER_SIZE);
 
-    Serial.print("POSTed state: ");
+    Serial.print("Recevied POST /state: ");
     Serial.println(buffer);
 
     stateMachine.setState(atoi(buffer));
@@ -140,7 +142,7 @@ void setup(void) {
 
     server.arg(0).toCharArray(name, BUFFER_SIZE);
 
-    Serial.print("POSTed print: ");
+    Serial.print("Recevied POST /print: ");
     Serial.println(name);
 
     server.send(200);

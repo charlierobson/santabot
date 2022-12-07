@@ -1,0 +1,6 @@
+@font-face {
+    font-family: 'Christmas';
+    src: url(christmas.woff) format('woff');
+    src: url(christmas.woff2) format('woff2');
+    src: url(christmas.ttf) format('truetype');
+}

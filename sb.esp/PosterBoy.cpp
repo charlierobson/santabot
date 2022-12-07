@@ -8,7 +8,7 @@ extern char buffer[];
 extern char fzm1[];
 extern char cf20[];
 
-void PosterBoy::send(const char* server, const char* endpoint, const char* data)
+int PosterBoy::send(const char* server, const char* endpoint, const char* data)
 {
 	WiFiClient client;
 	HTTPClient http;
@@ -25,4 +25,6 @@ void PosterBoy::send(const char* server, const char* endpoint, const char* data)
 	Serial.println(httpResponseCode);
 	Serial.println();
 	http.end();
+
+	return httpResponseCode;
 }

@@ -8,11 +8,11 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace printx
+namespace santabot
 {
     class Program
     {
-        private static string _homeDir;
+        private static string _dataDir;
 
         private static SoundPlayer _sp;
 
@@ -51,9 +51,13 @@ namespace printx
 
             _sp = new SoundPlayer();
 
-            Console.WriteLine($"sb.print@ {ip}:8000/");
+            Console.WriteLine($"sb.print IP: http://{ip}:8000/");
 
-            _homeDir = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            PrinterSettings printerSettings = new PrinterSettings();
+            Console.WriteLine($"sb.print default printer: {printerSettings.PrinterName}");
+
+            var home = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            _dataDir = Path.Combine(home, "data");
 
             object strongly = new object();
 
@@ -95,20 +99,22 @@ namespace printx
                             if (url == "/loop")
                             {
                                 _sp.Stop();
-                                _sp.SoundLocation = Path.Combine(_homeDir, body);
+                                _sp.SoundLocation = Path.Combine(_dataDir, body);
                                 _sp.PlayLooping();
                             }
                             else if (url == "/play")
                             {
                                 _sp.Stop();
-                                _sp.SoundLocation = Path.Combine(_homeDir, body);
+                                _sp.SoundLocation = Path.Combine(_dataDir, body);
                                 _sp.Play();
                             }
                             else if (url == "/stop")
                             {
                                 _sp.Stop();
                             }
-
+                            else if (url == "/test")
+                            {
+                            }
                         }
                         catch { }
                     }
@@ -168,7 +174,7 @@ namespace printx
                 }
                 else
                 {
-                    var i = Image.FromFile(Path.Combine(_homeDir, "tu.png"));
+                    var i = Image.FromFile(Path.Combine(_dataDir, "tu.png"));
 
                     Rectangle m = ev.MarginBounds;
 
