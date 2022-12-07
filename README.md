@@ -24,6 +24,7 @@
 
 ### santabot
 * check e-stop
+* check e-stop wiring!
 * turn off printer
 * turn on santabot
 * run check
