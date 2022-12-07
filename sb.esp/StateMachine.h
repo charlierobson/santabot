@@ -18,11 +18,12 @@ class StateMachine {
       startup,        // 1 quick startup animation -> nameselect
       nameselect,     // 2 ambient animation
       waittouch,      // 3 name is selected, sb does waiting for touch anim touch -> touched
-      touched,        // 4 confirmation anim -> evaluate
-      evaluate,       // 5 main animation
-      nice,           // 6 colourful happy anim -> nameselect
-      naughty,        // 7 naughty anim -> go wrong
-      gowrong,        // 8 glitching out, press of f-stop -> hal
+      waittouch2,     // 4 naughty, get out bodge
+      touched,        // 5 confirmation anim -> evaluate
+      evaluate,       // 6 main animation
+      nice,           // 7 colourful happy anim -> nameselect
+      naughty,        // 8 naughty anim -> go wrong
+      gowrong,        // 9 glitching out, press of f-stop -> hal
       hal
     } state;
 

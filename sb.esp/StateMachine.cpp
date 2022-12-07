@@ -60,6 +60,8 @@ void StateMachine::update()
 
   int nextState = _state;
 
+  bool isNaughty = strcmp(name, "naughty") == 0;
+
   switch (_state) {
 
     case sleep:
@@ -103,21 +105,34 @@ void StateMachine::update()
         if (_frames == 0) {
           PosterBoy::send(fzm1, "stop", "-");
           ringLed.setPattern(WS28::ptnOff);
-          // if julie..?
-          if (strcmp(name, "naughty") == 0) {
+
+          if (isNaughty) {
             PosterBoy::send(fzm1, "play", "arcing.wav");
             skirtLed.setPattern(WS28::ptnArcing);
           }
           else {
-            // need to play a doobeedoop here
+            PosterBoy::send(fzm1, "loop", "hellswaitingroom.wav");
             skirtLed.setPattern(WS28::ptnWaitTouch);
           }
+
+          if (millis() - _lastMillis > 3500 && isNaughty) {
+            PosterBoy::send(fzm1, "loop", "hellswaitingroom.wav");
+			setState(waittouch2);
+		  }
         }
         // exit state when touched
         if (capTouch.update()) 
           nextState = evaluate;
       }
       break;
+
+    case waittouch2:
+      {
+        // exit state when touched
+        if (capTouch.update()) 
+          nextState = evaluate;
+	  }
+	  break;
 
     case evaluate:
       {
@@ -129,8 +144,6 @@ void StateMachine::update()
         }
 
         theOrb.setSpeed(millis() & 1024 ? orbBaseSpeed : -orbBaseSpeed);
-
-		bool isNaughty = strcmp(name, "naughty") == 0;
 
         if (millis() - _lastMillis > (isNaughty ? 8000 : 5000)) {
           nextState = isNaughty ? naughty : nice;
