@@ -5,15 +5,14 @@ import './fonts.css';
 
 
 const Name = styled.span`
-  color: goldenrod;
+  color: black;
   position: relative;
     font-size: 100px;
-    width: 100%;
-    bottom: 580px;
+    top: 50px;
+    width: 1000px;
     display: flex;
   justify-content: center;
   text-align: center;
-  right: 420px;
 
   display: inline-block;
     max-height: 300px;
@@ -29,27 +28,27 @@ const Name = styled.span`
 
 //https://codepen.io/PrimarchtheMage/pen/NWjMePo
 const StyledNames = styled.div`
-  color: goldenrod;
-  position: relative;
-  width: 100%;
-  bottom: 300px;
+  color: black;
+  position: absolute;
+  width: 1000px;
+  top: 70px;
+  left: 240px;
   font-size: 100px;
   display: flex;
   justify-content: center;
 
     display: inline-block;
-    max-height: 150px;
+    max-height: 100px;
     vertical-align: top;
-    position: relative;
-    height: 300px;
+    height: 100px;
     overflow: hidden;
     z-index: 100;
 
   & span {
-    width: 100%;
+    width: 700px;
     display: block;
     position: absolute;
-    animation-duration: 1s;
+    animation-duration: 4s;
     animation-timing-function: ease-in-out;
     animation-iteration-count: infinite;
     text-align: center;
@@ -59,12 +58,12 @@ const StyledNames = styled.div`
     display: inline;
   }
 
-@keyframes anim-1 {
+  @keyframes anim-1 {
     0% { bottom: 0;}
-  15% { bottom: 110%;}
+    15% { bottom: 110%;}
     84% { opacity: 0; bottom: 110%;}
     85% { bottom: -110%; opacity: 0;}
-  86% {bottom: -110%; opacity: 1;}
+    86% {bottom: -110%; opacity: 1;}
     100% { bottom: 0;}
 }
 
@@ -72,14 +71,14 @@ const StyledNames = styled.div`
 	0% { bottom: -110%;}
   15% { bottom: 0;}
   30% { bottom: 110%; opacity: 1;}
-    31% { opacity: 0; bottom: 110%;}
-    100% { bottom: -110%;opacity: 0}
+  31% { opacity: 0; bottom: 110%;}
+  100% { bottom: -110%;opacity: 0}
 }
 
 @keyframes anim-3 {
     0%, 16%{ bottom: -110%;}
-  30% { bottom: 0;}
-  44% { bottom: 110%; opacity: 1;}
+    30% { bottom: 0;}
+    44% { bottom: 110%; opacity: 1;}
     45% { opacity: 0; bottom: 110%;}
     100% { bottom: -110%;opacity: 0}
 }
@@ -137,14 +136,68 @@ const StyledNames = styled.div`
   }
 `;
 
+export const firstNames = [
+  'Julie',
+  'Agnieszka',
+  'Andrew',
+  'Anton',
+  'Dan',
+  'Danny',
+  'Gary',
+  'Jamie',
+  'Janet',
+  'Lewis',
+  'Marrick',
+  'Matt',
+  'Michael',
+  'Mike',
+  'Paul C',
+  'Paul O',
+  'Richard G',
+  'Richard H',
+  'Sinead',
+  'Virgilus'
+];
 
+function getNamesToDisplay() {
+  const newArray: string[] = [];
+  while(newArray.length < 7) {
+    const randomElement = firstNames[Math.floor(Math.random() * firstNames.length)];
+    if (!newArray.includes(randomElement)) {
+      newArray.push(randomElement)
+    }
+  }
+  return newArray;
+}
 function Names(props: { name: string }) {
+  const fullNames = [
+    'Julie Purves',
+    'Agnieszka Zuchowicz',
+    'Andrew Donovan',
+    'Anton Flugge',
+    'Dan Hedges',
+    'Danny Ronsayro',
+    'Gary Lee',
+    'Jamie McConnell',
+    'Janet Wilson',
+    'Lewis Jackson-McKetty',
+    'Marrick Somal',
+    'Matt Parsons',
+    'Michael Rowe',
+    'Mike Darnell',
+    'Paul Carrington',
+    'Paul Owen',
+    'Richard Grills',
+    'Richard Harding',
+    'Sinead Charles',
+    'Virgilus Chebe'
+  ];
     const [nameReady, setNameReady] = useState(false);
     useEffect(() => {
       console.log("sending name");  
       fetch(espPrint, {
             method: 'POST',
-            body: props.name === 'Julie' ? `naughty`: `${props.name}`,
+            body: props.name === 'Julie' ? `naughty`: fullNames[firstNames.indexOf(props.name)],
             headers: {
               'content-type': 'text/plain'
             }
@@ -155,17 +208,13 @@ function Names(props: { name: string }) {
           headers: {
             'content-type': 'text/plain'
           }
-        });}, 3000)
+        });}, 4000)
     }, [])
+    // const namesToDisplay = getNamesToDisplay();
     return (
         <>
             {!nameReady && <StyledNames>
-                <span className="title-slide">Andy</span>
-                <span className="title-slide">Anton</span>
-                <span className="title-slide">Julie</span>
-                <span className="title-slide">Michael</span>
-                <span className="title-slide">Lewis</span>
-                <span className="title-slide">Em</span>
+                {getNamesToDisplay().map((name: string) => <span className="title-slide">{name}</span>)}
             </StyledNames>}
             {props.name && nameReady && <Name>{props.name}</Name>}
         </>
