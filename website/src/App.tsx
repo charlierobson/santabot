@@ -11,7 +11,7 @@ import hair from './hair.png';
 import styled from 'styled-components';
 import './fonts.css';
 import { io } from "socket.io-client";
-import Names from './names';
+import Names, { firstNames } from './names';
 import Sleeping from './sleeping';
 
 
@@ -607,6 +607,17 @@ type SantaState = {
   mood: 'asleep' | 'ambient' | 'thinking' | 'glitchy' | 'glitchy2' | 'Naughty!' | 'Nice!' | 'hal' //merge with naughty or nice
 }
 
+function getListOfNames() {
+  const newArray: string[] = [];
+  while(newArray.length < 3) {
+    const randomElement = firstNames[Math.floor(Math.random() * firstNames.length)];
+    if (!newArray.includes(randomElement) && randomElement !== 'Julie') {
+      newArray.push(randomElement)
+    }
+  }
+  newArray.push('Julie');
+  return newArray;
+}
 function App() {
   const THINKING_TIME = 4000;
   // https://socket.io/docs/v4/client-initialization/
@@ -614,7 +625,7 @@ function App() {
 
   const [santaState, setSantaState] = useState<SantaState>({
     displayNamesList: false,
-    namesLeftToDisplay: ['Andy', 'Anton', 'Julie'],
+    namesLeftToDisplay: getListOfNames(),
     mood: 'asleep' // should be asleep
   });
 
@@ -679,6 +690,7 @@ function App() {
     socket.on('stateChange', onStatusChange);
     return () => { socket.removeListener('stateChange', onStatusChange) };
   },[socket, santaState.namesLeftToDisplay])
+  const [showButton, setShowButton] = useState(true);
   // socket.on('stateChange', function (msg) {
   //   console.log('STATUS CHANGE')
   //   if (msg === 4) {
@@ -703,7 +715,7 @@ function App() {
   return (
     santaState.mood === 'hal' ? <HalBackground><Hal /></HalBackground> : <PageContainer glitchy={santaState.mood === 'glitchy'} glitchy2={santaState.mood === 'glitchy2'}>
       <Page glitchy={santaState.mood === 'glitchy'} glitchy2={santaState.mood === 'glitchy2'}>
-        {santaState.mood === 'asleep' && <StartButton onClick={() => { console.log("setting state 1"); fetch(espSetState, {
+        {showButton && santaState.mood === 'asleep' && <StartButton onClick={() => { setShowButton(false); fetch(espSetState, {
     method: 'POST',
     body: '1',
     headers: {
