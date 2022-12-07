@@ -153,7 +153,7 @@ void StateMachine::update()
 
         theOrb.setSpeed(millis() & 1024 ? orbBaseSpeed : -orbBaseSpeed);
 
-        if (millis() - _lastMillis > (isNaughty ? 8000 : 5000)) {
+        if (millis() - _lastMillis > (isNaughty ? 7000 : 5000)) {
           nextState = isNaughty ? naughty : nice;
         }
       }
