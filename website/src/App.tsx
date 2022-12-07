@@ -14,6 +14,13 @@ import { io } from "socket.io-client";
 import Names from './names';
 import Sleeping from './sleeping';
 
+
+
+const espPrint  = "http://192.168.1.195/print";
+const espSetState  = "http://192.168.1.195/setState";
+const serverIP = "http://192.168.1.171:8081";
+
+
 /* 1920 x 1200 */
 const PageContainer = styled.div`
   width: 1600px;
@@ -589,7 +596,7 @@ type SantaState = {
 function App() {
   const THINKING_TIME = 4000;
   // https://socket.io/docs/v4/client-initialization/
-  const socket = io('localhost:8081'); // pass url when not on same domain
+  const socket = io(serverIP); // pass url when not on same domain
 
   const [santaState, setSantaState] = useState<SantaState>({
     displayNamesList: false,
@@ -679,7 +686,7 @@ function App() {
   return (
     santaState.mood === 'hal' ? <Hal /> : <PageContainer glitchy={santaState.mood === 'glitchy'} glitchy2={santaState.mood === 'glitchy2'}>
       <Page glitchy={santaState.mood === 'glitchy'} glitchy2={santaState.mood === 'glitchy2'}>
-        {santaState.mood === 'asleep' && <StartButton onClick={() => { fetch('http://192.168.1.195/setState', {
+        {santaState.mood === 'asleep' && <StartButton onClick={() => { console.log("setting state 1"); fetch(espSetState, {
     method: 'POST',
     body: '1',
     headers: {

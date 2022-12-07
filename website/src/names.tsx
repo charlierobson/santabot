@@ -2,6 +2,13 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import './fonts.css';
 
+
+const espPrint  = "http://192.168.1.195/print";
+const espSetState  = "http://192.168.1.195/setState";
+const serverIP = "http://192.168.1.171:8081";
+
+
+
 const Name = styled.span`
   color: goldenrod;
   position: relative;
@@ -139,14 +146,15 @@ const StyledNames = styled.div`
 function Names(props: { name: string }) {
     const [nameReady, setNameReady] = useState(false);
     useEffect(() => {
-        fetch('http://192.168.1.195/print', {
+      console.log("sending name");  
+      fetch(espPrint, {
             method: 'POST',
             body: props.name === 'Julie' ? `naughty`: `${props.name}`,
             headers: {
               'content-type': 'text/plain'
             }
           });
-        setTimeout(() => { setNameReady(true); fetch('http://192.168.1.195/setState', {
+        setTimeout(() => { console.log("setState 3"); setNameReady(true); fetch(espSetState, {
           method: 'POST',
           body: '3',
           headers: {

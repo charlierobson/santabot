@@ -101,7 +101,7 @@ void StateMachine::update()
     case waittouch:
       {
         if (_frames == 0) {
-          PosterBoy::send(fzm1, "stop", "");
+          PosterBoy::send(fzm1, "stop", "-");
           ringLed.setPattern(WS28::ptnOff);
           // if julie..?
           if (strcmp(name, "naughty") == 0) {
@@ -171,7 +171,7 @@ void StateMachine::update()
        if (fStop.engaged()) {
           nextState = hal;
           PosterBoy::send(cf20, "santabot", "hal");
-          PosterBoy::send(fzm1, "stop", "");
+          PosterBoy::send(fzm1, "stop", "-");
        }
       }
       break;

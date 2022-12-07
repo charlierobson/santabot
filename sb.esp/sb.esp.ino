@@ -37,9 +37,7 @@ void setup(void) {
 
   Serial.println("");
 
-  strcpy(svars[0],"http://172.16.5.67:8000/");
-  strcpy(svars[1],"http://13.40.82.25:8081/");
-  for(int i = 2; i < 5; ++i)
+  for(int i = 0; i < 5; ++i)
     strcpy(svars[i], "--");
 
   wifiMulti.addAP("Pottymother", "ec3ecbf5e8");
@@ -61,14 +59,21 @@ void setup(void) {
   Serial.print(host);
   Serial.println(".local");
 
-  sprintf(buffer, "%s", WiFi.localIP());
-
   server.enableCORS(true);
 
+  IPAddress adr = WiFi.localIP();
+  if (adr[0] == 192) {
+	strcpy(svars[0],"http://192.168.1.116:8000/"); // fz-m1
+	strcpy(svars[1],"http://192.168.1.171:8081/"); // cf-20
+  }
+  else {
+	strcpy(svars[0],"http://172.16.5.67:8000/");
+	strcpy(svars[1],"http://172.16.5.99:8081/");
+  }
+
   server.on("/", HTTP_GET, []() {
-	IPAddress adr = WiFi.localIP();
+    IPAddress adr = WiFi.localIP();
     sprintf(buffer, "%d.%d.%d.%d", adr[0], adr[1], adr[2], adr[3]);
-    server.sendHeader("Connection", "close");
     server.send(200, "text/html", buffer);
   });
 
@@ -84,9 +89,9 @@ void setup(void) {
 	 svars[0],svars[1],svars[2],svars[3],svars[4]);
     server.send(200, "application/json", buffer);
   });
-  server.on("/setState", HTTP_POST, []() {
-    char* endPtr;
 
+  server.on("/setState", HTTP_POST, []() {
+    server.sendHeader("Connection", "close");
     if (server.args() == 0) {
       return server.send(500);
     }
@@ -99,6 +104,7 @@ void setup(void) {
     stateMachine.setState(atoi(buffer));
     server.send(200);
   });
+
   server.on("/setVars", HTTP_POST, []() {
     int i = 0;
     if (server.args() == 0) {
@@ -117,6 +123,7 @@ void setup(void) {
 
     server.send(200);
   });
+
   server.on("/setConfig", HTTP_POST, []() {
     int i = 0;
     if (server.args() == 0) {
@@ -135,6 +142,7 @@ void setup(void) {
 
     server.send(200);
   });
+
   server.on("/print", HTTP_POST, []() {
     if (server.args() == 0) {
       return server.send(500);
@@ -148,7 +156,6 @@ void setup(void) {
     server.send(200);
   });
 
-  /*handling uploading firmware file */
   server.on("/update", HTTP_POST, []() {
     server.sendHeader("Connection", "close");
     server.send(200, "text/plain", (Update.hasError()) ? "FAIL" : "OK");
