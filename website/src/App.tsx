@@ -622,12 +622,12 @@ function App() {
           // })
           setTimeout(() => {
             setSantaState(s => ({ ...s, mood: 'glitchy2', displayNamesList: false, namesLeftToDisplay: newArray }));
-            setTimeout(() => {
-              setSantaState(s => ({ ...s, mood: 'glitchy', displayNamesList: false, namesLeftToDisplay: newArray }));
-              // setTimeout(() => {
-              //   setSantaState(s => ({ ...s, mood: 'hal', displayNamesList: false, namesLeftToDisplay: newArray }));
-              // }, 2000)
-            }, 5000)
+            // setTimeout(() => {
+            //   setSantaState(s => ({ ...s, mood: 'glitchy', displayNamesList: false, namesLeftToDisplay: newArray }));
+            //   // setTimeout(() => {
+            //   //   setSantaState(s => ({ ...s, mood: 'hal', displayNamesList: false, namesLeftToDisplay: newArray }));
+            //   // }, 2000)
+            // }, 5000)
           }, 3000)
         }, THINKING_TIME + 3000)
       } else {
