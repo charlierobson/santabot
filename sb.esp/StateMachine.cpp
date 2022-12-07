@@ -148,10 +148,7 @@ void StateMachine::update()
           sprintf(buffer, "nice %s", name);
           PosterBoy::send(fzm1, "print", buffer);
         }
-        // exit state when print complete
-        if (millis() - _lastMillis > 6000) {
-          nextState = nameselect;
-        }
+        // exit state when told
       }
       break;
 
