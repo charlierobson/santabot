@@ -112,8 +112,14 @@ bool WS28::hal()
 bool WS28::nameSelect()
 {
   FastLED.setBrightness(16);
-  for (int i = 0; i < 40; ++i) {
-     _leds[i] = ((i/4)&1) ? CRGB::Green : CRGB::Red;
+  if (millis() & 1024) {
+	for (int i = 0; i < 40; ++i) {
+		_leds[i] = ((i/4)&1) ? CRGB::Green : CRGB::Red;
+	}
+  } else {
+	for (int i = 0; i < 40; ++i) {
+		_leds[i] = ((i/4)&1) ? CRGB::Red : CRGB::Green;
+	}
   }
 
   return false;

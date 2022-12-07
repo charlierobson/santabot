@@ -36,6 +36,9 @@ void StateMachine::begin(int initialState)
 
 void StateMachine::setState(int state)
 {
+	if (_state == state && state != 0)
+	return;
+
   Serial.print("StateMachine::setState ");
   Serial.println(state);
 
@@ -60,13 +63,17 @@ void StateMachine::update()
 
   int nextState = _state;
 
-  bool isNaughty = strcmp(name, "naughty") == 0;
+	bool isNaughty = strcmp(name, "naughty") == 0;
+	vars[0] = isNaughty;
+	vars[1] = capTouch.update();
+	vars[2] = fStop.engaged();
 
   switch (_state) {
 
     case sleep:
       {
         if (_frames == 0) {
+          PosterBoy::send(fzm1, "stop", "-");
           ringLed.setPattern(WS28::ptnOff);
           skirtLed.setPattern(WS28::ptnBreathe);
           theOrb.setSpeed(0);
@@ -114,12 +121,13 @@ void StateMachine::update()
             PosterBoy::send(fzm1, "loop", "hellswaitingroom.wav");
             skirtLed.setPattern(WS28::ptnWaitTouch);
           }
-
-          if (millis() - _lastMillis > 3500 && isNaughty) {
-            PosterBoy::send(fzm1, "loop", "hellswaitingroom.wav");
-			setState(waittouch2);
-		  }
         }
+
+		if ((millis() - _lastMillis > 3500) && isNaughty) {
+			PosterBoy::send(fzm1, "loop", "hellswaitingroom-n.wav");
+			nextState = waittouch2;
+		}
+
         // exit state when touched
         if (capTouch.update()) 
           nextState = evaluate;
