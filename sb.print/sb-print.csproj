@@ -88,6 +88,12 @@
     <Content Include="data\fading.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="data\hellswaitingroom-n.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="data\hellswaitingroom.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="data\nameselect.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

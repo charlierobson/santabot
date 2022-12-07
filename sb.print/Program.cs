@@ -21,11 +21,14 @@ namespace santabot
         private static Font computo30;
         private static Font courier;
 
+        private static int adj = 0;
+
         private static string[] adjectives =
         {
-            "SORTA",
+            "QUITE",
+            "HELLA",
             "MOSTLY",
-            "HELLA"
+            "SORTA"
         };
 
         static void Main(string[] cmdLine)
@@ -168,9 +171,10 @@ namespace santabot
                     ev.Graphics.DrawString("CONGRATULATIONS", computo30, Brushes.Black, 0, yPos, new StringFormat());
                     ev.Graphics.DrawString(name, courier, Brushes.Black, 0, yPos + 60, new StringFormat());
                     ev.Graphics.DrawString("SantaBot rated you:", computo20, Brushes.Black, 0, yPos + 150, new StringFormat());
-                    ev.Graphics.DrawString($"*** {adjectives[rando.Next(adjectives.Length)]} NICE ***", computo20, Brushes.Black, 0, yPos + 230, new StringFormat());
-
+                    ev.Graphics.DrawString($"*** {adjectives[adj & 3]} NICE ***", computo20, Brushes.Black, 0, yPos + 230, new StringFormat());
                     pd.DefaultPageSettings.Landscape = true;
+
+                    adj++;
                 }
                 else
                 {
