@@ -580,10 +580,24 @@ const ThinkingText = styled.div`
 `
 
 const Hal = styled.div`
+@keyframes Fade {
+  100% {
+    opacity: 0;
+    background-color: black;
+  }
+}
+
   background: url(${hal}) 0 0/contain no-repeat;
   width: 3000px;
   height: 1000px;
+  animation: 9s linear 6s Fade;
   background-color: black;
+`
+
+const HalBackground = styled.div`
+  background-color: black;
+  width: 100%;
+  height: 100%;
 `
 
 type SantaState = {
@@ -656,6 +670,9 @@ function App() {
       if (msg === 'hal') {
         // console.log('message is 4 ', nameToDisplay);
         setSantaState(s => ({ ...s, mood: 'hal' }))
+        setTimeout(() => {
+          setSantaState(s => ({ ...s, mood: 'glitchy' }))
+        }, 15100)
       }
     }
 
@@ -684,7 +701,7 @@ function App() {
   console.log('names left to display ', santaState.namesLeftToDisplay);
 
   return (
-    santaState.mood === 'hal' ? <Hal /> : <PageContainer glitchy={santaState.mood === 'glitchy'} glitchy2={santaState.mood === 'glitchy2'}>
+    santaState.mood === 'hal' ? <HalBackground><Hal /></HalBackground> : <PageContainer glitchy={santaState.mood === 'glitchy'} glitchy2={santaState.mood === 'glitchy2'}>
       <Page glitchy={santaState.mood === 'glitchy'} glitchy2={santaState.mood === 'glitchy2'}>
         {santaState.mood === 'asleep' && <StartButton onClick={() => { console.log("setting state 1"); fetch(espSetState, {
     method: 'POST',
