@@ -1,12 +1,7 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { espPrint, espSetState } from './App';
 import './fonts.css';
-
-
-const espPrint  = "http://192.168.1.195/print";
-const espSetState  = "http://192.168.1.195/setState";
-const serverIP = "http://192.168.1.171:8081";
-
 
 
 const Name = styled.span`

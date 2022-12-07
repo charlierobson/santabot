@@ -16,9 +16,9 @@ import Sleeping from './sleeping';
 
 
 
-const espPrint  = "http://192.168.1.195/print";
-const espSetState  = "http://192.168.1.195/setState";
-const serverIP = "http://192.168.1.171:8081";
+export const espPrint  = "http://192.168.1.195/print";
+export const espSetState  = "http://192.168.1.195/setState";
+export const serverIP = "http://192.168.1.171:8081";
 
 
 /* 1920 x 1200 */
@@ -697,7 +697,13 @@ function App() {
         {santaState.mood === 'asleep' && <Sleeping />}
         {santaState.mood === 'thinking' && <ThinkingText>Thinking<div className="dot-elastic"></div></ThinkingText>}
         <NiceText naughtyOrNice={santaState.mood}>{santaState.mood === 'Nice!' ? 'Nice!' : ''}</NiceText>
-        {santaState.mood === 'Nice!' && <NextButton onClick={() => setSantaState(s => ({ ...s, displayNamesList: true, mood: 'ambient' }))}>Continue Evaluation</NextButton>}
+        {santaState.mood === 'Nice!' && <NextButton onClick={() => { console.log("setting state 2"); fetch(espSetState, {
+    method: 'POST',
+    body: '2',
+    headers: {
+      'content-type': 'text/plain'
+    }
+  }); setSantaState(s => ({ ...s, displayNamesList: true, mood: 'ambient' })) }}>Continue Evaluation</NextButton>}
         <NaughtyText naughtyOrNice={santaState.mood}>{santaState.mood === 'Naughty!' ? 'Naughty!' : ''}</NaughtyText>
         <SantaBody data-id="body" glitchy={santaState.mood === 'glitchy' || santaState.mood === 'glitchy2'} />
         <SantaFace data-id="face" glitchy={santaState.mood === 'glitchy'} glitchy2={santaState.mood === 'glitchy2'}>
