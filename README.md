@@ -44,29 +44,31 @@
 cb:
   introduce self as chief scientist at santabulator industries. previous projects - medibot, and a little something you cant talk about for the sister company aperture.
   introduce cr as helper, part of charitable enterprise to help the criminally incompetant.
-
-both: 
-  gesture toward door, (people turn), 'introducing ... santabot!', santabot responds
+  
+both:   
+  gesture toward door, (people turn), 'introducing ... santabot!', santabot responds.  
   'oh he's already here'. uncover santabot.
-
-cb:
-  introduces SB as initiative to help santa as he is facing unprecidented issues
-cr:
-  (under breath) you mean the dna harvester?
-cb:
-  i told you shut up!
-
-cr:
-  oh i have the latest code - i'll just upgrade it
-cb:
-  has this even been tested?
-cr:
-  ... this version hasn't killed anyone. yet.
-
+  
+cb:  
+  introduces SB as initiative to help santa as he is facing unprecidented issues  
+cr:   
+  (under breath) you mean the dna harvester?  
+cb:  
+  i told you shut up!  
+  
+cr:  
+  oh i have the latest code - i'll just upgrade it  
+cb:  
+  has this even been tested?  
+cr:  
+  ... this version hasn't killed anyone. yet.  
+  
 (inserts floppy)
-
-cb:
-  a quick run down on how SB works. blah blah advanced AI.
-
-cr:
-  (starts santabot)
+  
+cb:  
+  a quick run down on how SB works. blah blah advanced AI.  
+  
+cr:  
+  (starts santabot)  
+  
+  .. wing it!
