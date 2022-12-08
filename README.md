@@ -73,3 +73,8 @@ cr:
   (starts santabot)  
   
   .. wing it!
+
+Julie:
+ 'is it safe'? (prep her with this)
+ 
+cr & cb: huddle, making 'dunno' gestures. turn to julie and say 'yes definitely' in fake happy voices.
