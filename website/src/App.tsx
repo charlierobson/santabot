@@ -16,9 +16,9 @@ import Sleeping from './sleeping';
 
 
 
-export const espPrint  = "http://192.168.1.195/print";
-export const espSetState  = "http://192.168.1.195/setState";
-export const serverIP = "http://192.168.1.171:8081";
+export const espPrint  = "http://172.16.5.67/print";
+export const espSetState  = "http://172.16.5.67/setState";
+export const serverIP = "http://172.16.5.66:8081";
 
 
 /* 1920 x 1200 */

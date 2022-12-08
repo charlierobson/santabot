@@ -68,7 +68,7 @@ void setup(void) {
   }
   else {
 	strcpy(svars[0],"http://172.16.5.67:8000/");
-	strcpy(svars[1],"http://172.16.5.99:8081/");
+	strcpy(svars[1],"http://172.16.5.66:8081/");
   }
 
   server.on("/", HTTP_GET, []() {
