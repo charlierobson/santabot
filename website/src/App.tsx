@@ -16,9 +16,9 @@ import Sleeping from './sleeping';
 
 
 
-export const espPrint  = "http://172.16.5.68/print";
-export const espSetState  = "http://172.16.5.68/setState";
-export const serverIP = "http://172.16.5.66:8081";
+export const espPrint  = "http://192.168.1.140/print";
+export const espSetState  = "http://192.168.1.140/setState";
+export const serverIP = "http://192.168.1.118.:8081";
 
 
 /* 1920 x 1200 */
@@ -609,7 +609,7 @@ type SantaState = {
 
 function getListOfNames() {
   const newArray: string[] = [];
-  while(newArray.length < 3) {
+  while(newArray.length < 5) {
     const randomElement = firstNames[Math.floor(Math.random() * firstNames.length)];
     if (!newArray.includes(randomElement) && randomElement !== 'Justine') {
       newArray.push(randomElement)
