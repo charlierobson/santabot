@@ -137,25 +137,15 @@ const StyledNames = styled.div`
 `;
 
 export const firstNames = [
-  'Julie',
-  'Agnieszka',
-  'Andrew',
-  'Anton',
-  'Dan',
-  'Danny',
-  'Gary',
-  'Jamie',
-  'Janet',
-  'Lewis',
-  'Marrick',
-  'Michael',
-  'Mike',
-  'Paul C',
-  'Paul O',
-  'Richard G',
-  'Richard H',
-  'Sinead',
-  'Virgilus'
+  'Justine',
+  'Herbie',
+  'Joe',
+  'Hank',
+  'Jacques',
+  'Riley',
+  'Sophie',
+  'Kate',
+  'Gillian'
 ];
 
 function getNamesToDisplay() {
@@ -170,32 +160,22 @@ function getNamesToDisplay() {
 }
 function Names(props: { name: string }) {
   const fullNames = [
-    'Julie Purves',
-    'Agnieszka Zuchowicz',
-    'Andrew Donovan',
-    'Anton Flugge',
-    'Dan Hedges',
-    'Danny Ronsayro',
-    'Gary Lee',
-    'Jamie McConnell',
-    'Janet Wilson',
-    'Lewis Jackson-McKetty',
-    'Marrick Somal',
-    'Michael Rowe',
-    'Mike Darnell',
-    'Paul Carrington',
-    'Paul Owen',
-    'Richard Grills',
-    'Richard Harding',
-    'Sinead Charles',
-    'Virgilus Chebe'
+    'Justine Schneider',
+    'Herbie Robson',
+    'Joe Talbot',
+    'Hank Schneider',
+    'Jacques Talbot',
+    'Riley Robson',
+    'Sophie Mullins',
+    'Kate Schneider',
+    'Gillian Robson'
   ];
     const [nameReady, setNameReady] = useState(false);
     useEffect(() => {
       console.log("sending name");  
       fetch(espPrint, {
             method: 'POST',
-            body: props.name === 'Julie' ? `naughty`: fullNames[firstNames.indexOf(props.name)],
+            body: props.name === 'Justine' ? `naughty`: fullNames[firstNames.indexOf(props.name)],
             headers: {
               'content-type': 'text/plain'
             }

@@ -611,11 +611,11 @@ function getListOfNames() {
   const newArray: string[] = [];
   while(newArray.length < 3) {
     const randomElement = firstNames[Math.floor(Math.random() * firstNames.length)];
-    if (!newArray.includes(randomElement) && randomElement !== 'Julie') {
+    if (!newArray.includes(randomElement) && randomElement !== 'Justine') {
       newArray.push(randomElement)
     }
   }
-  newArray.push('Julie');
+  newArray.push('Justine');
   return newArray;
 }
 function App() {
